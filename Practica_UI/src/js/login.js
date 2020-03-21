@@ -51,7 +51,7 @@
 
 					if (dato.Status == "ok")
 						Console.log("Se cambio la contraseña")
-						//Cerrar modal desde JS
+						//Sacar la clase "show" del "modal"
 					else
 						alert(dato.Message);
 				},
