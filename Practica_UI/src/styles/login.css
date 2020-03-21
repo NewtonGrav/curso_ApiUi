@@ -1,0 +1,19 @@
+﻿body{
+    height:100vh;
+}
+
+#miApp{
+    height:100vh;
+}
+
+/*
+   Medidas del contenedor para centrar el formulario
+*/
+#form_container{
+    width: 450px;
+    height: 100vh;
+}
+
+#miForm{
+    border: solid 1.5px #e6e6e6;
+}
