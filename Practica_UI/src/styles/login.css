@@ -17,3 +17,31 @@
 #miForm{
     border: solid 1.5px #e6e6e6;
 }
+
+#miBg{
+    background-image: url("https://images.wallpapersden.com/image/download/gradient-rainbow-5k_65713_5120x2880.jpg");
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#container__btnChangePass{
+    border: 1px solid white;
+    transition: color .15s ease-in-out,
+        background-color .15s ease-in-out,
+        border-color .15s ease-in-out,
+        box-shadow .15s ease-in-out;
+}
+
+#container__btnChangePass:hover{
+    border: 1px solid #007bff;
+}
+
+#btnChangePass{
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* #container__btnChangePass:hover #btnChangePass{
+    color: white;
+} */
