@@ -41,6 +41,7 @@
 					
 					alert(data.Message);
 					// TODO: Sacar la clase "show" del modal cambio de conntrassenia para ocultarlo
+
 				},
 				error: (error) => alert(JSON.stringify(error))
 			});
