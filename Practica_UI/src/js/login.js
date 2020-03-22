@@ -15,72 +15,51 @@
 				dataType: 'json',
 				contentType: "application/json; charset=utf-8",
 				success: function ({ message }) {
-					console.log(message);
-					
 					window.location = "https://localhost:44326/" + message;
-
-					//else if (res.Status == "300") {
-					//	crearUsuario(userName, password, "Grilla2.html")
-					//}
-
 				},
-				error: (error) => console.log(JSON.stringify(error))
+				error: (error) => console.log(JSON.stringify(error))	//TODO: Manejar "error" de intento de Logeo
 			});
 		}
 		else
 			alert("Complete los campos")
 	})
 
-	//Verificar ID boton
-	$("#btnAceptarChangePass").click(function (e) {
+	$("#btnAceptChangePass").click(function (e) {
 		let userName = $("#fNewPassEmail").val();
 		let newPass = $("#fNewPass").val();
 
 		if (userName != "" && newPass.length >= 5) {
-			let data = { userName, newPass };
+			let data = { userName, newPass };	 // TODO: Modificar data (acorde al service) del ajax para cambio de contrasenia
 
 			$.ajax({
 				url: "/service.asmx/ChangePassword",
-				method: "POST",
+				method: "POST",		// TODO: Modificar POST del cambio de contrasenia por PUT
 				data: JSON.stringify(data),
 				dataType: 'json',
 				contentType: "application/json; charset=utf-8",
-				success: (data) => {
-					let dato = data.d || data;
-					dato = JSON.parse(dato);
-
-					if (dato.Status == "ok")
-						Console.log("Se cambio la contraseña")
-						//Sacar la clase "show" del "modal"
-					else
-						alert(dato.Message);
+				success: (data) => {	// TODO: Manejar "success" para el cambio de contrasenia
+					
+					alert(data.Message);
+					// TODO: Sacar la clase "show" del modal cambio de conntrassenia para ocultarlo
 				},
 				error: (error) => alert(JSON.stringify(error))
 			});
-		} else {
+		} else
 			alert("Complete los campos");
-		}
 	});
+
+	$("#btnCreateNewUser").click(function (e){
+		$.ajax({
+			url: "/service.asmx/CrearUsuario",
+			method: "POST",
+			data: JSON.stringify(data),
+			dataType: 'json',
+			contentType: "application/json; charset=utf-8",
+			success: function (data) {		//TODO: Manejar "success" para la cracion de usuario
+				
+			},
+			error: (error) => alert(JSON.stringify(error))		//Manejar "error" de la creacion de usuario
+		});
+	});
+
 });
-
-var crearUsuario = (userName, password, page) => {
-	let data = { userName, password, page };
-
-	$.ajax({
-		url: "/service.asmx/CrearUsuario",
-		method: "POST",
-		data: JSON.stringify(data),
-		dataType: 'json',
-		contentType: "application/json; charset=utf-8",
-		success: function (data) {
-			let dato = data.d || data;
-			dato = JSON.parse(dato);
-
-			if (dato.Status == "ok")
-				window.location = "https://localhost:44379/" + page;
-
-			alert(dato.Message);
-		},
-		error: (error) => alert(JSON.stringify(error))
-	});
-};

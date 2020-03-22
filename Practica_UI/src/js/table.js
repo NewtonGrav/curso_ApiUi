@@ -6,7 +6,6 @@
 		method: "GET",
 		dataType: 'json',
 		success: function (data) {
-			debugger
 			let persons = data;
 
 			let html = insertarTabla(persons);
