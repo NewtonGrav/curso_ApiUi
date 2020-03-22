@@ -15,8 +15,7 @@
         <div id="miBg" class="position-absolute"></div>
 
         <div id="form_container" class="row mx-auto align-items-center">
-            
-            <div id="miForm" class="col p-5 shadow bg-white rounded">
+            <div id="miForm" class="col p-5 shadow-lg bg-white rounded">
                 <!--Formulario-->
                 <div class="row">
                     <div class="col">
@@ -36,24 +35,24 @@
                     <div class="col-12 mb-3">
                         <div class="row p-3 justify-content-center border-bottom">
                             <button id="btnLogin" class="btn btn-primary btn-lg btn-block">
-                                Iniciar sesion
+                                Iniciar sesión
                             </button>
                             <div id="container__btnChangePass" class="px-4 py-2 mt-2 rounded">
-                                <a id="btnChangePass" class="py-1" type="button" data-toggle="modal" data-target="#miModal">
-                                    Cambiar contraseña
+                                <a id="btnChangePass" class="py-1" type="button" data-toggle="modal" data-target="#changePassModal">
+                                    ¿Olvidaste tu contraseña?
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="col-12">
-                        <button id="btnCreateUser" class="mb-2 btn btn-outline-primary btn-lg btn-block">
-                            Crear una cuenta
+                        <button id="btnNewUser" class="mb-2 btn btn-outline-primary btn-lg btn-block" type="button" data-toggle="modal" data-target="#newUserModal">
+                            Crearme una cuenta
                         </button>
                     </div>
                 </div>
 
-                <!--Modal-->
-                <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true">
+                <!--Modals-->
+                <div class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -65,11 +64,11 @@
 
                             <div class="modal-body">
                                 <div class="col">
-                                    <div class="form-group h-50">
+                                    <div class="form-group">
                                         <label for="fNewPassEmail">Email</label>
                                         <input type="email" class="form-control" id="fNewPassEmail" aria-describedby="emailHelp">
                                     </div>
-                                    <div class="form-group h-50">
+                                    <div class="form-group">
                                         <label for="fNewPass">Nueva contraseña</label>
                                         <input type="password" class="form-control" id="fNewPass">
                                     </div>
@@ -80,17 +79,57 @@
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                                     Cancelar
                                 </button>
-                                <button type="button" class="btn btn-primary">
-                                    Guardar contraseña
+                                <button id="btnAceptChangePass" type="button" class="btn btn-primary">
+                                    Aceptar
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="modal fade" id="newUserModal", tabindex="-1", role="dialog" aria-labelledby="modalHeader" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalHeader">Creá tu usuario</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="fNewUserEmail">Email</label>
+                                        <input type="email" class="form-control" id="fNewUserEmail" aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="row justify-content-between px-3">
+                                        <div class="form-group">
+                                            <label for="fNewUserPass">Contraseña</label>
+                                            <input type="password" class="form-control" id="fNewUserPass">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="fNewUserPage">Pagina HTML</label>
+                                            <input type="password" class="form-control" id="fNewUserPage">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TODO: Definir IDs de botones del modal newUser -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                    Mejor no
+                                </button>
+                                <button id="btnCreateNewUser" type="button" class="btn btn-primary">
+                                    Crear mi usuario
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <script src="./src/js/jquery.js"></script>
