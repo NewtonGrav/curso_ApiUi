@@ -35,14 +35,9 @@
                 <div class="row mt-4">
                     <div class="col-12 mb-3">
                         <div class="row p-3 justify-content-center border-bottom">
-                            <button id="btnLogin" class="btn btn-primary btn-lg btn-block">
-                                Iniciar sesión
-                            </button>
+                            <button id="btnLogin" class="btn btn-primary btn-lg btn-block">Iniciar sesión</button>
                             <div id="container__btnChangePass" class="px-4 py-2 mt-2 rounded">
-                                <a id="btnChangePass" class="py-1" type="button" data-toggle="modal" data-target="#changePassModal">
-                                    ¿Olvidaste tu contraseña?
-
-                                </a>
+                                <a id="btnChangePass" class="py-1" type="button" data-toggle="modal" data-target="#changePassModal">¿Olvidaste tu contraseña?</a>
                             </div>
                         </div>
                     </div>
@@ -70,26 +65,28 @@
                                         <label for="fNewPassEmail">Email</label>
                                         <input type="email" class="form-control" id="fNewPassEmail" aria-describedby="emailHelp">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="fNewPass">Nueva contraseña</label>
-                                        <input type="password" class="form-control" id="fNewPass">
+                                    <div class="row justify-content-between px-3">
+                                        <div class="form-group">
+                                            <label for="fOldPass">Contraseña anterior</label>
+                                            <input type="password" class="form-control" id="fOldPass">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="fNewPass">Nueva contraseña</label>
+                                            <input type="password" class="form-control" id="fNewPass">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-                                    Cancelar
-                                </button>
-                                <button id="btnAceptChangePass" type="button" class="btn btn-primary">
-                                    Aceptar
-
-                                </button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                                <button id="btnAceptChangePass" type="button" class="btn btn-primary">Aceptar</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Modal Create User -->
                 <div class="modal fade" id="newUserModal", tabindex="-1", role="dialog" aria-labelledby="modalHeader" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -113,7 +110,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="fNewUserPage">Pagina HTML</label>
-                                            <input type="password" class="form-control" id="fNewUserPage">
+                                            <input type="text" class="form-control" id="fNewUserPage">
                                         </div>
                                     </div>
                                 </div>
@@ -121,12 +118,8 @@
 
                             <!-- TODO: Definir IDs de botones del modal newUser -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-                                    Mejor no
-                                </button>
-                                <button id="btnCreateNewUser" type="button" class="btn btn-primary">
-                                    Crear mi usuario
-                                </button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Mejor no</button>
+                                <button id="btnCreateNewUser" type="button" class="btn btn-primary">Crear mi usuario</button>
                             </div>
                         </div>
                     </div>

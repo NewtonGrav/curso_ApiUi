@@ -32,8 +32,8 @@
 			let data = { userName, newPass };	 // TODO: Modificar data (acorde al service) del ajax para cambio de contrasenia
 
 			$.ajax({
-				url: "/service.asmx/ChangePassword",
-				method: "POST",		// TODO: Modificar POST del cambio de contrasenia por PUT
+				url: "/service.asmx/ChangePassword",	//TODO: Modificar URL
+				method: "PUT",		
 				data: JSON.stringify(data),
 				dataType: 'json',
 				contentType: "application/json; charset=utf-8",
@@ -47,17 +47,24 @@
 			});
 		} else
 			alert("Complete los campos");
-	});
+	});	   //TODO: Finalizar implementacion
 
-	$("#btnCreateNewUser").click(function (e){
+	$("#btnCreateNewUser").click(function (e) {
+		let data = {
+			userName: $("#fNewUserEmail").val(),
+			password: $("#fNewUserPass").val(),
+			defaultPage: $("#fNewUserPage").val()
+		};
+
+		debugger
 		$.ajax({
-			url: "/service.asmx/CrearUsuario",
+			url: "https://localhost:5001/api/LoginCrud/CreateUser",
 			method: "POST",
 			data: JSON.stringify(data),
 			dataType: 'json',
 			contentType: "application/json; charset=utf-8",
-			success: function (data) {		//TODO: Manejar "success" para la cracion de usuario
-				
+			success: function ({ message }) {		//TODO: Manejar "success" para la cracion de usuario
+				alert(message);
 			},
 			error: (error) => alert(JSON.stringify(error))		//Manejar "error" de la creacion de usuario
 		});
