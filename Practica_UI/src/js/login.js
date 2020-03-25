@@ -1,73 +1,84 @@
 ﻿$(document).ready(function () {
 
-	$("#btnLogin").click(function (e) {
-		let userName = $("#fEmail").val();
-		let password = $("#fPass").val();
+    const login = (userName, password) => {
+        if (userName != "" && password.length >= 5) {
+            let data = { userName, password };
 
-		if (userName != "" && password.length >= 5) {
-			let data = { userName, password };
+            //stringify --> Objeto JS a JSON
+            $.ajax({
+                url: "https://localhost:5001/api/LoginCrud/Login",
+                method: "POST",
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function ({ message }) {
+                    window.location = "https://localhost:44326/" + message;
+                },
+                error: (error) => console.log(JSON.stringify(error))	//TODO: Manejar "error" de intento de Logeo
+            });
+        }
+        else alert("Complete los campos")
+    }
 
-			//stringify --> Objeto JS a JSON
-			$.ajax({
-				url: "https://localhost:5001/api/LoginCrud/Login",
-				method: "POST",
-				data: JSON.stringify(data),
-				dataType: 'json',
-				contentType: "application/json; charset=utf-8",
-				success: function ({ message }) {
-					window.location = "https://localhost:44326/" + message;
-				},
-				error: (error) => console.log(JSON.stringify(error))	//TODO: Manejar "error" de intento de Logeo
-			});
-		}
-		else
-			alert("Complete los campos")
-	})
+    const changePassword = (userName, password, newPassword) => {
+        if (userName != "" && newPassword.length >= 5) {
+            let user = { userName, password };	 
+            let data = { user, newPassword };
 
-	$("#btnAceptChangePass").click(function (e) {
-		let userName = $("#fNewPassEmail").val();
-		let newPass = $("#fNewPass").val();
+            $.ajax({
+                url: "https://localhost:5001/api/LoginCrud/UpdatePassword",
+                method: "PUT",
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: ({ message }) => {
+                    alert(message);
+                },
+                error: (error) => alert(JSON.stringify(error))
+            });
+        }
+        else alert("Complete los campos");
+    }
 
-		if (userName != "" && newPass.length >= 5) {
-			let data = { userName, newPass };	 // TODO: Modificar data (acorde al service) del ajax para cambio de contrasenia
+    const createUser = (userName, password, defaultPage) => {
+        let data = { userName, password, defaultPage };
 
-			$.ajax({
-				url: "/service.asmx/ChangePassword",	//TODO: Modificar URL
-				method: "PUT",		
-				data: JSON.stringify(data),
-				dataType: 'json',
-				contentType: "application/json; charset=utf-8",
-				success: (data) => {	// TODO: Manejar "success" para el cambio de contrasenia
-					
-					alert(data.Message);
-					// TODO: Sacar la clase "show" del modal cambio de conntrassenia para ocultarlo
+        $.ajax({
+            url: "https://localhost:5001/api/LoginCrud/CreateUser",
+            method: "POST",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function ({ message }) {		//TODO: Manejar "success" para la cracion de usuario
+                alert(message);
+            },
+            error: (error) => alert(JSON.stringify(error))		//TODO: Manejar "error" de la creacion de usuario
+        });
+    };
 
-				},
-				error: (error) => alert(JSON.stringify(error))
-			});
-		} else
-			alert("Complete los campos");
-	});	   //TODO: Finalizar implementacion
+    $("#btnLogin").click(function (e) {
+        let userName = $("#fEmail").val();
+        let password = $("#fPass").val();
 
-	$("#btnCreateNewUser").click(function (e) {
-		let data = {
-			userName: $("#fNewUserEmail").val(),
-			password: $("#fNewUserPass").val(),
-			defaultPage: $("#fNewUserPage").val()
-		};
+        login(userName, password);
 
-		debugger
-		$.ajax({
-			url: "https://localhost:5001/api/LoginCrud/CreateUser",
-			method: "POST",
-			data: JSON.stringify(data),
-			dataType: 'json',
-			contentType: "application/json; charset=utf-8",
-			success: function ({ message }) {		//TODO: Manejar "success" para la cracion de usuario
-				alert(message);
-			},
-			error: (error) => alert(JSON.stringify(error))		//Manejar "error" de la creacion de usuario
-		});
-	});
+    })
+
+    $("#btnAceptChangePass").click(function (e) {
+        let userName = $("#fNewPassEmail").val();
+        let oldPass = $("#fOldPass").val();
+        let newPass = $("#fNewPass").val();
+
+        changePassword(userName, oldPass, newPass)
+    });
+
+    $("#btnCreateNewUser").click(function (e) {
+        let userName = $("#fNewUserEmail").val();
+        let password = $("#fNewUserPass").val();
+        let defaultPage = $("#fNewUserPage").val();
+
+        createUser(userName, password, defaultPage);
+
+    });
 
 });
