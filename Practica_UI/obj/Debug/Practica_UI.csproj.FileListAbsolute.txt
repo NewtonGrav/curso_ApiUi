@@ -114,3 +114,4 @@ C:\Users\Gonzalo\source\repos\Practica_UI\Practica_UI\obj\Debug\Practica_UI.cspr
 C:\Users\Gonzalo\source\repos\Practica_UI\Practica_UI\obj\Debug\Practica_UI.csproj.CopyComplete
 C:\Users\Gonzalo\source\repos\Practica_UI\Practica_UI\obj\Debug\Practica_UI.dll
 C:\Users\Gonzalo\source\repos\Practica_UI\Practica_UI\obj\Debug\Practica_UI.pdb
+C:\Users\Gonzalo\source\repos\Practica_UI\Practica_UI\obj\Debug\Practica_UI.csprojAssemblyReference.cache

@@ -38,5 +38,20 @@
 	cargarDatosATabla();
 
 	//TODO: Peticion para insertar Personas a la tabla
-	
+
+	// Test
+	var personas = [
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" },
+		{ fullName: "Pedro Picapiedra", dni: "11223344" }
+	]
+
+	//tableHtml.append(insertarTabla(personas));
+
 })
