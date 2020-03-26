@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
 	let tableHtml = $("#tablePersons");
+	let miAlert = $("#miAlert");
 
 	const ajaxCargarDatosATabla = () => {
 		$.ajax({
@@ -43,31 +44,44 @@
 		$.ajax({
 			url: "https://localhost:5001/api/Table/AddPerson",
 			type: "PUT",
-			data: Json.stringify(data),
+			data: JSON.stringify(data),
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
-			success: ({ message }) => {
-				alert(message);
-
-				tableHtml.append(generarTablaDe(data));
-			},
-			error: (error) => alert(error)
+			success: (personAdded) => {
+				tableHtml.append(generarTablaDe([personAdded]));
+				mostrarAlerta("Se agrego una persona :)", "success");
+			}, 
+			error: (error) => mostrarAlerta(`Error ${error.status}: ${error.responseText}`, "warning")
 		});
 
 	}
 
 	$("#btnAddPerson").click(function () {
-		let fullName = $("fFullName").val();
-		let dni = $("fDni").val();
+		let fullName = $("#fFullName").val();
+		let dni = $("#fDni").val();
 
-		if (fullName !== "" && dni.length == 8 )
+		if (fullName !== "" && dni.length >= 8)
 			ajaxAgregarPersona(fullName, dni);
 		else
 			alert("Datos ingresados incorrectos");
 	});
 
+	// Funcionalidades
+	const mostrarAlerta = (msg, type) => {
+		let alertHtml = `
+		<div id="innerAlert" class="alert alert-${type} alert-dismissible fade" role="alert">
+			<p> ${msg}</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+		`
+		miAlert.append(alertHtml);
 
-	//** Tests
+		$("#innerAlert").toggleClass("show");
+	};
+
+	// Tests
 	var personas = [
 		{ fullName: "Pedro Picapiedra", dni: "11223344" },
 		{ fullName: "Pedro Picapiedra", dni: "11223344" },
@@ -80,5 +94,4 @@
 		{ fullName: "Pedro Picapiedra", dni: "11223344" }
 	]
 	//tableHtml.append(generarTablaDe(personas));
-
 })
