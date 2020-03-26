@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 	let tableHtml = $("#tablePersons");
 
-	const cargarDatosATabla = () => {
+	const ajaxCargarDatosATabla = () => {
 		$.ajax({
 			url: "https://localhost:5001/api/Table/GetPersons",
 			method: "GET",
@@ -9,7 +9,7 @@
 			success: function (data) {
 				let persons = data;
 
-				let html = insertarTabla(persons);
+				let html = generarTablaDe(persons);
 
 				tableHtml.append(html);
 			},
@@ -17,7 +17,7 @@
 		});
 	};
 
-	const insertarTabla = (persons) => {
+	const generarTablaDe = (persons) => {
 		let html = "";
 
 		const getFilaCon = (fullName, dni) => {
@@ -35,11 +35,39 @@
 		return html;
 	};
 
-	cargarDatosATabla();
+	ajaxCargarDatosATabla();
 
-	//TODO: Peticion para insertar Personas a la tabla
+	const ajaxAgregarPersona = (fullName, dni) => {
+		let data = { fullName, dni };
 
-	// Test
+		$.ajax({
+			url: "https://localhost:5001/api/Table/AddPerson",
+			type: "PUT",
+			data: Json.stringify(data),
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: ({ message }) => {
+				alert(message);
+
+				tableHtml.append(generarTablaDe(data));
+			},
+			error: (error) => alert(error)
+		});
+
+	}
+
+	$("#btnAddPerson").click(function () {
+		let fullName = $("fFullName").val();
+		let dni = $("fDni").val();
+
+		if (fullName !== "" && dni.length == 8 )
+			ajaxAgregarPersona(fullName, dni);
+		else
+			alert("Datos ingresados incorrectos");
+	});
+
+
+	//** Tests
 	var personas = [
 		{ fullName: "Pedro Picapiedra", dni: "11223344" },
 		{ fullName: "Pedro Picapiedra", dni: "11223344" },
@@ -51,7 +79,6 @@
 		{ fullName: "Pedro Picapiedra", dni: "11223344" },
 		{ fullName: "Pedro Picapiedra", dni: "11223344" }
 	]
-
-	//tableHtml.append(insertarTabla(personas));
+	//tableHtml.append(generarTablaDe(personas));
 
 })
