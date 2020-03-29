@@ -2,7 +2,7 @@
 	let tableHtml = $("#tablePersons");
 	let miAlert = $("#miAlert");
 
-	const ajaxCargarDatosATabla = () => {
+	const ajaxLoadTableData = () => {
 		$.ajax({
 			url: "https://localhost:5001/api/Table/GetPersons",
 			method: "GET",
@@ -10,7 +10,7 @@
 			success: function (data) {
 				let persons = data;
 
-				let html = generarTablaDe(persons);
+				let html = generateTableOf(persons);
 
 				tableHtml.append(html);
 			},
@@ -18,27 +18,32 @@
 		});
 	};
 
-	const generarTablaDe = (persons) => {
+	const generateTableOf = (persons) => {
 		let html = "";
 
-		const getFilaCon = (fullName, dni) => {
+		const getFilaWhit = (fullName, dni) => {
 			return `
-				<tr>
-					<td> ${fullName} </td>
+				<tr id="${dni}">
+					<td>
+						<button type="button" class="btnDeletePerson btn btn-danger mr-4">
+							Eliminar
+						</button>
+					 	${fullName} 
+					</td>
 					<td> ${dni}  </td>
 				</tr>`
 		};
 
 		persons.map((p) => {
-			html += getFilaCon(p.fullName, p.dni);
+			html += getFilaWhit(p.fullName, p.dni);
 		});
 
 		return html;
 	};
 
-	ajaxCargarDatosATabla();
+	ajaxLoadTableData();
 
-	const ajaxAgregarPersona = (fullName, dni) => {
+	const ajaxAddPerson = (fullName, dni) => {
 		let data = { fullName, dni };
 
 		$.ajax({
@@ -48,10 +53,11 @@
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
 			success: (personAdded) => {
-				tableHtml.append(generarTablaDe([personAdded]));
-				mostrarAlerta("Se agrego una persona :)", "success");
-			}, 
-			error: (error) => mostrarAlerta(`Error ${error.status}: ${error.responseText}`, "warning")
+				debugger
+				tableHtml.append(generateTableOf([personAdded]));
+				showAlert("Se agrego una persona :)", "success");
+			},
+			error: (error) => showAlert(`Error ${error.status}: ${error.responseText}`, "warning")
 		});
 
 	}
@@ -61,13 +67,42 @@
 		let dni = $("#fDni").val();
 
 		if (fullName !== "" && dni.length >= 8)
-			ajaxAgregarPersona(fullName, dni);
+			ajaxAddPerson(fullName, dni);
 		else
-			alert("Datos ingresados incorrectos");
+			showAlert("Los datos ingresados son incorrectos", "info");
+	});
+
+	const ajaxDeletePerson = (dniPerson) => {
+		return $.ajax({
+			url: `https://localhost:5001/api/Table/DeletePerson?dniPerson=${dniPerson}`,
+			type: "DELETE",
+			success: (data) => {
+				showAlert(data.message, "success");
+			},
+			error: (error) => console.log(error)
+		});
+	}
+
+	//Elegacion de eventos: En vez de escuchar al boton, escucho a su contenedor principal, la tabla. De esta forma resgistro una unica vez el evento
+	$("#tablePersons").on("click", ".btnDeletePerson", function () {
+		//Busca el texto en la celda DNI(buttton -> td(fullName) -> td(dni)). 
+		//Al agregar celdas cambiar logica para buscar el siblings(elemento hermano) correcto
+		let dniPersonToDelete = $(this).parent().siblings().text();
+		dniPersonToDelete = dniPersonToDelete.trim();
+
+		if (dniPersonToDelete.length == 8) {
+			ajaxDeletePerson(dniPersonToDelete)
+				.then((res) => {
+					let rowToDelete = $(this).parent().parent();
+					$(rowToDelete).remove();
+				});
+		}
+		else
+			showAlert("Datos invalidos. Verifiquelos", "info");
 	});
 
 	// Funcionalidades
-	const mostrarAlerta = (msg, type) => {
+	const showAlert = (msg, type) => {
 		let alertHtml = `
 		<div id="innerAlert" class="alert alert-${type} alert-dismissible fade" role="alert">
 			<p> ${msg}</p>
@@ -76,7 +111,7 @@
             </button>
         </div>
 		`
-		miAlert.append(alertHtml);
+		miAlert.html(alertHtml);
 
 		$("#innerAlert").toggleClass("show");
 	};
@@ -84,14 +119,14 @@
 	// Tests
 	var personas = [
 		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "11223344" }
+		{ fullName: "Pedro Picapiedra", dni: "34234233" },
+		{ fullName: "Pedro Picapiedra", dni: "45445422" },
+		{ fullName: "Pedro Picapiedra", dni: "45422323" },
+		{ fullName: "Pedro Picapiedra", dni: "55522234" },
+		{ fullName: "Pedro Picapiedra", dni: "88852i44" },
+		{ fullName: "Pedro Picapiedra", dni: "34342222" },
+		{ fullName: "Pedro Picapiedra", dni: "22463484" },
+		{ fullName: "Pedro Picapiedra", dni: "45362342" }
 	]
-	//tableHtml.append(generarTablaDe(personas));
+	//tableHtml.append(generateTableOf(personas));
 })
