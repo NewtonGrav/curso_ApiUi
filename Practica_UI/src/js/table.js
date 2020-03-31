@@ -4,7 +4,7 @@
 
 	const ajaxLoadTableData = () => {
 		$.ajax({
-			url: "https://localhost:5001/api/Table/GetPersons",
+			url: "https://localhost:5003/api/Table/GetPersons",
 			method: "GET",
 			dataType: 'json',
 			success: function (data) {
@@ -14,94 +14,93 @@
 
 				tableHtml.append(html);
 			},
-			error: (error) => console.log(JSON.stringify(error))
+			error: (error) => alertError(error)
 		});
 	};
 
-	const generateTableOf = (persons) => {
-		let html = "";
-
-		const getFilaWhit = (fullName, dni) => {
-			return `
-				<tr id="${dni}">
-					<td>
-						<button type="button" class="btnDeletePerson btn btn-danger mr-4">
-							Eliminar
-						</button>
-					 	${fullName} 
-					</td>
-					<td> ${dni}  </td>
-				</tr>`
-		};
-
-		persons.map((p) => {
-			html += getFilaWhit(p.fullName, p.dni);
-		});
-
-		return html;
-	};
-
-	ajaxLoadTableData();
-
-	const ajaxAddPerson = (fullName, dni) => {
-		let data = { fullName, dni };
+	const ajaxAddPerson = (name, surName, dni) => {
+		dni = parseInt(dni);
+		let data = { name, surName, dni };
 
 		$.ajax({
-			url: "https://localhost:5001/api/Table/AddPerson",
+			url: "https://localhost:5003/api/Table/AddPerson",
 			type: "PUT",
 			data: JSON.stringify(data),
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
 			success: (personAdded) => {
-				debugger
 				tableHtml.append(generateTableOf([personAdded]));
-				showAlert("Se agrego una persona :)", "success");
+				showAlert("Se agrego una persona.", "success");
 			},
-			error: (error) => showAlert(`Error ${error.status}: ${error.responseText}`, "warning")
+			error: (error) => alertError(error)
 		});
-
 	}
-
-	$("#btnAddPerson").click(function () {
-		let fullName = $("#fFullName").val();
-		let dni = $("#fDni").val();
-
-		if (fullName !== "" && dni.length >= 8)
-			ajaxAddPerson(fullName, dni);
-		else
-			showAlert("Los datos ingresados son incorrectos", "info");
-	});
 
 	const ajaxDeletePerson = (dniPerson) => {
 		return $.ajax({
-			url: `https://localhost:5001/api/Table/DeletePerson?dniPerson=${dniPerson}`,
+			url: `https://localhost:5003/api/Table/DeletePerson?dniPerson=${dniPerson}`,
 			type: "DELETE",
 			success: (data) => {
 				showAlert(data.message, "success");
 			},
-			error: (error) => console.log(error)
+			error: (error) => alertError(error)
 		});
 	}
 
-	//Elegacion de eventos: En vez de escuchar al boton, escucho a su contenedor principal, la tabla. De esta forma resgistro una unica vez el evento
-	$("#tablePersons").on("click", ".btnDeletePerson", function () {
-		//Busca el texto en la celda DNI(buttton -> td(fullName) -> td(dni)). 
-		//Al agregar celdas cambiar logica para buscar el siblings(elemento hermano) correcto
-		let dniPersonToDelete = $(this).parent().siblings().text();
-		dniPersonToDelete = dniPersonToDelete.trim();
+	ajaxLoadTableData();
 
-		if (dniPersonToDelete.length == 8) {
-			ajaxDeletePerson(dniPersonToDelete)
-				.then((res) => {
-					let rowToDelete = $(this).parent().parent();
-					$(rowToDelete).remove();
-				});
-		}
+	$("#btnAddPerson").click(function () {
+		let name = $("#fName").val().trim();
+		let surName = $("#fSurName").val().trim();
+		let dni = $("#fDni").val().trim();
+
+		if (name !== "" && surName !== "" && dni.length >= 8)
+			ajaxAddPerson(name, surName, dni);
 		else
-			showAlert("Datos invalidos. Verifiquelos", "info");
+			showAlert("Ingrese los datos para continuar o verifíquelos", "info");
+	});
+
+	/*
+	 * Delegacion de eventos: En vez de escuchar a tdodos los botones 
+	 * se lo hace a su contenedor principal que es la tabla.
+	*/
+	$("#tablePersons").on("click", ".btnDeletePerson", function () {
+		//Se definio en el ID de cada celda el dni de cada persona
+		let dniPersonToDelete = $(this).parent().parent().attr("id");
+
+		ajaxDeletePerson(dniPersonToDelete)
+			.then(res => {
+				let rowToDelete = $(this).parent().parent();
+				$(rowToDelete).remove();
+			})
 	});
 
 	// Funcionalidades
+	const generateTableOf = (persons) => {
+		//persons: Array de personas
+		let html = "";
+
+		const createFilaWhit = (name, surName, dni) => {
+			return `
+				<tr id="${dni}">
+					<td>${name}</td>
+					<td>${surName}</td>
+					<td>${dni}</td>
+					<td>
+						<button type="button" class="btnDeletePerson btn btn-danger mr-4">
+							Eliminar
+						</button>
+					</td>
+				</tr>`
+		};
+
+		persons.map((p) => {
+			html += createFilaWhit(p.name, p.surName, p.dni);
+		});
+
+		return html;
+	};
+
 	const showAlert = (msg, type) => {
 		let alertHtml = `
 		<div id="innerAlert" class="alert alert-${type} alert-dismissible fade" role="alert">
@@ -116,17 +115,26 @@
 		$("#innerAlert").toggleClass("show");
 	};
 
+	const alertError = (error) => {
+		if (error.readyState !== 0) {
+			error = JSON.parse(error.responseText);
+			showAlert(`Error ${error.status}:\n${JSON.stringify(error.errors)}`, "danger")
+		} else
+			showAlert("No hay conexión con el servidor.", "danger");
+
+	};	 //TODO: Verificar con BD
+
 	// Tests
 	var personas = [
-		{ fullName: "Pedro Picapiedra", dni: "11223344" },
-		{ fullName: "Pedro Picapiedra", dni: "34234233" },
-		{ fullName: "Pedro Picapiedra", dni: "45445422" },
-		{ fullName: "Pedro Picapiedra", dni: "45422323" },
-		{ fullName: "Pedro Picapiedra", dni: "55522234" },
-		{ fullName: "Pedro Picapiedra", dni: "88852i44" },
-		{ fullName: "Pedro Picapiedra", dni: "34342222" },
-		{ fullName: "Pedro Picapiedra", dni: "22463484" },
-		{ fullName: "Pedro Picapiedra", dni: "45362342" }
+		{ name: "Pedro", surName: "Picapiedra", dni: "11223344" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "34234233" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "45445422" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "45422323" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "55522234" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "88852244" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "34342222" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "22463484" },
+		{ name: "Pedro", surName: "Picapiedra", dni: "45362342" }
 	]
 	//tableHtml.append(generateTableOf(personas));
 })
