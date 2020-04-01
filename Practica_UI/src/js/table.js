@@ -9,7 +9,6 @@
 			dataType: 'json',
 			success: function (data) {
 				let persons = data;
-
 				let html = generateTableOf(persons);
 
 				tableHtml.append(html);
@@ -116,13 +115,18 @@
 	};
 
 	const alertError = (error) => {
-		if (error.readyState !== 0) {
-			error = JSON.parse(error.responseText);
-			showAlert(`Error ${error.status}:\n${JSON.stringify(error.errors)}`, "danger")
-		} else
-			showAlert("No hay conexión con el servidor.", "danger");
+		let typeError = "danger";
 
-	};	 //TODO: Verificar con BD
+		if (error.readyState !== 0) {
+			let status = `Error ${error.status}:`;
+			if (error.responseJSON !== undefined)
+				showAlert(`${status} ${JSON.stringify(error.responseJSON.errors)}`, typeError);
+			else
+				showAlert(`${status} ${error.responseText}`, typeError)
+		} else
+			showAlert("No hay conexión con el servidor.", typeError);
+
+	};
 
 	// Tests
 	var personas = [
