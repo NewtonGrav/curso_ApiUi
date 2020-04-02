@@ -18,7 +18,6 @@
 	};
 
 	const ajaxAddPerson = (name, surName, dni) => {
-		dni = parseInt(dni);
 		let data = { name, surName, dni };
 
 		$.ajax({
@@ -51,9 +50,11 @@
 	$("#btnAddPerson").click(function () {
 		let name = $("#fName").val().trim();
 		let surName = $("#fSurName").val().trim();
-		let dni = $("#fDni").val().trim();
+		let dni = parseInt($("#fDni").val().trim());
 
-		if (name !== "" && surName !== "" && dni.length >= 8)
+		let cantDigitosDni = Math.floor(Math.log10(dni)) + 1;
+
+		if (name !== "" && surName !== "" && cantDigitosDni >= 8)
 			ajaxAddPerson(name, surName, dni);
 		else
 			showAlert("Ingrese los datos para continuar o verifíquelos", "info");
