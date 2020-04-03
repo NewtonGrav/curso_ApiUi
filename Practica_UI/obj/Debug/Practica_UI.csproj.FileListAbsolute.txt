@@ -114,3 +114,4 @@ C:\Users\gonzalo-net\Source\Repos\NewtonGrav\curso_ApiUi\Practica_UI\obj\Debug\P
 C:\Users\gonzalo-net\Source\Repos\NewtonGrav\curso_ApiUi\Practica_UI\obj\Debug\Practica_UI.csproj.CopyComplete
 C:\Users\gonzalo-net\Source\Repos\NewtonGrav\curso_ApiUi\Practica_UI\obj\Debug\Practica_UI.dll
 C:\Users\gonzalo-net\Source\Repos\NewtonGrav\curso_ApiUi\Practica_UI\obj\Debug\Practica_UI.pdb
+C:\Users\Gonzalo\source\repos\Practica_UI\Practica_UI\obj\Debug\Practica_UI.csprojAssemblyReference.cache

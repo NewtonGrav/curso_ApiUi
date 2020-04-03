@@ -1,10 +1,12 @@
 ﻿$(document).ready(function () {
 	let tableHtml = $("#tablePersons");
 	let miAlert = $("#miAlert");
+	let token = localStorage.getItem('token');
 
-	const ajaxLoadTableData = () => {
+	const ajaxLoadTableData = (token) => {
+		debugger
 		$.ajax({
-			url: "https://localhost:5003/api/Table/GetPersons",
+			url: `https://localhost:5003/api/Table/GetPersons?token=${token}`,
 			method: "GET",
 			dataType: 'json',
 			success: function (data) {
@@ -35,8 +37,9 @@
 	}
 
 	const ajaxDeletePerson = (dniPerson) => {
+		let parameters = `?dniPerson=${dniPerson}`
 		return $.ajax({
-			url: `https://localhost:5003/api/Table/DeletePerson?dniPerson=${dniPerson}`,
+			url: `https://localhost:5003/api/Table/DeletePerson${parameters}`,
 			type: "DELETE",
 			success: (data) => {
 				showAlert(data.message, "success");
@@ -45,7 +48,9 @@
 		});
 	}
 
-	ajaxLoadTableData();
+	ajaxLoadTableData(token);
+
+
 
 	$("#btnAddPerson").click(function () {
 		let name = $("#fName").val().trim();
@@ -74,6 +79,7 @@
 				$(rowToDelete).remove();
 			})
 	});
+
 
 	// Funcionalidades
 	const generateTableOf = (persons) => {
@@ -128,6 +134,7 @@
 			showAlert("No hay conexión con el servidor.", typeError);
 
 	};
+
 
 	// Tests
 	var personas = [

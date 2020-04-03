@@ -9,8 +9,11 @@
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
-            success: ({ message }) => {
-                window.location = "https://localhost:44326/" + message;
+            success: (resul) => {
+                let token = resul.guid;
+                localStorage.setItem("token", token);
+
+                window.location = "https://localhost:44326/" + resul.message;
             },
             error: (error) => console.log(error.responseText)
         });
