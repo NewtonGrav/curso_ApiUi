@@ -3,9 +3,56 @@
     let miAlert = $("#miAlert");
     let token = localStorage.getItem('token');
 
+
+    ajaxLoadTableData(token)
+        .catch(error => {
+            redirectionAlert(error);
+        });
+
+
+
+    // Eventos
+    $("#btnAddPerson").click(function () {
+        let name = $("#fName").val().trim();
+        let surName = $("#fSurName").val().trim();
+        let dni = parseInt($("#fDni").val().trim());
+        let cantDigitosDni = Math.floor(Math.log10(dni)) + 1;
+
+        if (name !== "" && surName !== "" && cantDigitosDni >= 7)
+            ajaxAddPerson(name, surName, dni)
+                .catch(error => {
+                    redirectionAlert(error);
+                });
+        else
+            showAlert("Ingrese los datos para continuar o verifíquelos", "info");
+    });
+
+	/*
+	 * Delegacion de eventos: En vez de escuchar a tdodos los botones 
+	 * se lo hace a su contenedor principal que es la tabla.
+	**/
+    $("#tablePersons").on("click", ".btnDeletePerson", function () {
+        //Se definio en el ID de cada celda el dni de cada persona
+        let dniPersonToDelete = $(this).parent().parent().attr("id");
+
+        ajaxDeletePerson(dniPersonToDelete)
+            .then(res => {
+                let rowToDelete = $(this).parent().parent();
+                $(rowToDelete).remove();
+            })
+            .catch(error => {
+                redirectionAlert(error);
+            });
+    });
+
+
+
+    // Peticiones
     const ajaxLoadTableData = (token) => {
+        let parameters = `?token=${token}`
+
         return $.ajax({
-            url: `https://localhost:5003/api/Table/GetPersons?token=${token}`,
+            url: `https://localhost:5003/api/Table/GetPersons${parameters}`,
             method: "GET",
             dataType: 'json',
             success: function (data) {
@@ -18,10 +65,11 @@
     };
 
     const ajaxAddPerson = (name, surName, dni) => {
+        let parameters = `?token=${token}`
         let data = { name, surName, dni };
 
-        $.ajax({
-            url: "https://localhost:5003/api/Table/AddPerson",
+        return $.ajax({
+            url: `https://localhost:5003/api/Table/AddPerson${parameters}`,
             type: "PUT",
             data: JSON.stringify(data),
             dataType: "json",
@@ -35,7 +83,8 @@
     }
 
     const ajaxDeletePerson = (dniPerson) => {
-        let parameters = `?dniPerson=${dniPerson}`
+        let parameters = `?dniPerson=${dniPerson}&token=${token}`
+
         return $.ajax({
             url: `https://localhost:5003/api/Table/DeletePerson${parameters}`,
             type: "DELETE",
@@ -46,44 +95,6 @@
         });
     }
 
-    ajaxLoadTableData(token)
-        .catch(error => {
-            alertError(error, "Se te redireccionara en unos segundos");
-            if (error.status === 401) {
-                setTimeout(function () {
-                    window.location.href = window.origin += "/Login.html";
-                }, 5000);
-            }
-        });
-
-
-
-    $("#btnAddPerson").click(function () {
-        let name = $("#fName").val().trim();
-        let surName = $("#fSurName").val().trim();
-        let dni = parseInt($("#fDni").val().trim());
-        let cantDigitosDni = Math.floor(Math.log10(dni)) + 1;
-
-        if (name !== "" && surName !== "" && cantDigitosDni >= 7)
-            ajaxAddPerson(name, surName, dni);
-        else
-            showAlert("Ingrese los datos para continuar o verifíquelos", "info");
-    });
-
-	/*
-	 * Delegacion de eventos: En vez de escuchar a tdodos los botones 
-	 * se lo hace a su contenedor principal que es la tabla.
-	*/
-    $("#tablePersons").on("click", ".btnDeletePerson", function () {
-        //Se definio en el ID de cada celda el dni de cada persona
-        let dniPersonToDelete = $(this).parent().parent().attr("id");
-
-        ajaxDeletePerson(dniPersonToDelete)
-            .then(res => {
-                let rowToDelete = $(this).parent().parent();
-                $(rowToDelete).remove();
-            })
-    });
 
 
     // Funcionalidades
@@ -110,6 +121,15 @@
         });
 
         return html;
+    };
+
+    const redirectionAlert = (error) => {
+        alertError(error, "Se te redireccionara en unos segundos");
+        if (error.status == 400 || error.status === 401) {
+            setTimeout(function () {
+                window.location.href = window.origin += "/Login.html";
+            }, 5000);
+        }
     };
 
     const showAlert = (msg, type) => {
@@ -139,6 +159,7 @@
             showAlert("No hay conexión con el servidor.", typeError);
 
     };
+
 
 
     // Tests
